@@ -127,10 +127,42 @@ router.get('/countries_to_outbreaks/:country_id', async (req, res) => {
   try {
     const Country_out = await db.countries_to_outbreaks.findAll({
       where: {
-        country_id: req.params.country_id
+        country_id: req.params.country_id,
       }
     });
     res.json(Country_out);
+  } catch (err) {
+    console.error(err);
+    res.error('Server error');
+  }
+});
+
+//post method 
+router.post('/countries_to_outbreaks/:country_id', async (req, res) => {
+    const Country_out = await db.countries_to_outbreaks.findAll({
+  const Country_out = await db.countries_to_outbreaks.findAll();
+  const currentId = (await countries_to_outbreaks.length) + 1;
+  try {
+    const newCountry_out = await db.countries_to_outbreaks.create({
+      country_id: currentId,
+      outbreak_id: req.body.outbreak_id,
+    });
+    res.json(newCountry_out);
+  } catch (err) {
+    console.error(err);
+    res.error('Server error');
+  }
+});
+
+//delete records
+router.delete('/countries_to_outbreaks/:country_id', async (req, res) => {
+  try {
+    await db.countries_to_outbreaks.destroy({
+      where: {
+        country_id: req.params.country_id
+      }
+    });
+    res.send('Successfully Deleted');
   } catch (err) {
     console.error(err);
     res.error('Server error');
@@ -150,7 +182,7 @@ router.put('/countries_to_outbreaks', async (req, res) => {
         }
       }
     );
-    res.send('Meal Successfully Updated');
+    res.send('Country to Outbreaks Successfully Updated');
   } catch (err) {
     console.error(err);
     res.error('Server error');
@@ -252,7 +284,7 @@ router.put('/countries', async (req, res) => {
 /// /////////////////////////////////
 router.get('/outbreaks', async (req, res) => {
   try {
-    const restrictions = await db.outbreaks.findAll();
+    const outbreaks = await db.outbreaks.findAll();
     res.json(restrictions);
   } catch (err) {
     console.error(err);
@@ -262,12 +294,12 @@ router.get('/outbreaks', async (req, res) => {
 
 router.get('/outbreaks/:outbreak_id', async (req, res) => {
   try {
-    const restrictions = await db.outbreaks.findAll({
+    const outbreaks = await db.outbreaks.findAll({
       where: {
         outbreak_id: req.params.outbreak_id
       }
     });
-    res.json(restrictions);
+    res.json(outbreaks);
   } catch (err) {
     console.error(err);
     res.error('Server error');
