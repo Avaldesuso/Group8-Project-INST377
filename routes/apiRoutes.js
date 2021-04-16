@@ -109,10 +109,14 @@ router.put('/diseases', async (req, res) => {
 /// /////////////////////////////////
 /// ////////Countries to outbreaks Endpoints//////////
 /// /////////////////////////////////
+
+//written by Andrew Valdesuso
+
+//get
 router.get('/countries_to_outbreaks', async (req, res) => {
   try {
-    const meals = await db.countries_to_outbreaks.findAll();
-    res.json(meals);
+    const Country_out = await db.countries_to_outbreaks.findAll();
+    res.json(Country_out);
   } catch (err) {
     console.error(err);
     res.error('Server error');
@@ -121,28 +125,28 @@ router.get('/countries_to_outbreaks', async (req, res) => {
 
 router.get('/countries_to_outbreaks/:country_id', async (req, res) => {
   try {
-    const meals = await db.countries_to_outbreaks.findAll({
+    const Country_out = await db.countries_to_outbreaks.findAll({
       where: {
         country_id: req.params.country_id
       }
     });
-    res.json(meals);
+    res.json(Country_out);
   } catch (err) {
     console.error(err);
     res.error('Server error');
   }
 });
 
+//put
 router.put('/countries_to_outbreaks', async (req, res) => {
   try {
     await db.countries_to_outbreaks.update(
       {
-        meal_name: req.body.meal_name,
-        meal_category: req.body.meal_category
+        outbreak_id: req.body.outbreak_id
       },
       {
         where: {
-          meal_id: req.body.meal_id
+          country_id: req.body.country_id
         }
       }
     );
