@@ -424,10 +424,13 @@ router.get('/treatments_to_diseases/:disease_id', async (req, res) => {
 /// /////////////////////////////////
 /// treatments Endpoints///
 /// /////////////////////////////////
+
+//written by Andrew Valdesuso
+
 router.get('/treatments', async (req, res) => {
   try {
-    const restrictions = await db.treatments.findAll();
-    res.json(restrictions);
+    const treatments = await db.treatments.findAll();
+    res.json(treatments);
   } catch (err) {
     console.error(err);
     res.error('Server error');
@@ -436,17 +439,72 @@ router.get('/treatments', async (req, res) => {
 
 router.get('/treatments/:vaccine_name', async (req, res) => {
   try {
-    const restrictions = await db.treatments.findAll({
+    const treatments = await db.treatments.findAll({
       where: {
         vaccine_name: req.params.vaccine_name
       }
     });
-    res.json(restrictions);
+    res.json(treatments);
   } catch (err) {
     console.error(err);
     res.error('Server error');
   }
 });
+
+router.post('/treatments', async (req, res) => {
+  const treatments = await db.treatments.indAll();
+  const currentId = (await treatments.length) + 1;
+  try {
+    const newtreatments = await db.treatments.create({
+      vaccine_name: currentId,
+      total_vaccinations: req.body.total_vaccinations,
+      vaccine_form: req.body.vaccine_form,
+      vaccine_success_rate: req.body.vaccine_success_rate,
+      vaccine_release_date: req.body.vaccine_release_date,
+    });
+    res.json(newtreatments);
+  } catch (err) {
+    console.error(err);
+    res.error('Server error');
+  }
+});
+
+router.delete('/treatments/:vaccine_name', async (req, res) => {
+  try {
+    await db.treatments.destroy({
+      where: {
+        vaccine_name: req.params.vaccine_name
+      }
+    });
+    res.send('Successfully Deleted');
+  } catch (err) {
+    console.error(err);
+    res.error('Server error');
+  }
+});
+
+router.put('/treatments', async (req, res) => {
+  try {
+    await db.treatments.update(
+      {
+        total_vaccinations: req.body.total_vaccinations,
+        vaccine_form: req.body.vaccine_form,
+        vaccine_success_rate: req.body.vaccine_success_rate,
+        vaccine_release_date: req.body.vaccine_release_date,
+      },
+      {
+        where: {
+          vaccine_name: req.body.vaccine_name
+        }
+      }
+    );
+    res.send('Successfully Updated');
+  } catch (err) {
+    console.error(err);
+    res.error('Server error');
+  }
+});
+
 
 /// //////////////////////////////////
 /// ///////Custom SQL Endpoint////////
